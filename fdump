@@ -1,0 +1,143 @@
+ <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css"  rel="stylesheet" />
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">               
+        <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+         Add
+        </button>
+    
+            <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] ">
+                <div class="relative p-4">
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif                  
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Image Title</label>
+                                <input type="text" name="title" id="title" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="link" class="form-label">Link</label>
+                                <input type="text" name="link" id="link" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Select Image</label>
+                                <input type="file" name="image" id="image" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+
+
+
+            @foreach($data as $d)
+            
+           <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <img 
+                class="rounded-t-lg w-full h-48 object-cover" 
+                src="{{ asset('storage/' . $d->path) }}" 
+                alt="{{ $d->title }}" 
+              />
+              <div class="p-5">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {{ $d->title }}
+                </h5>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                  {{ $d->link }}
+                </p>
+                <form action="{{ route('image.edit', $d->id) }}">
+                  <button 
+                    type="submit" 
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Edit
+                  </button>
+                  </form>
+                  <form action="{{ route('image.delete.action', $d->id) }}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit">hapus</button>
+                </form>
+              </div>
+            </div>
+
+
+            @endforeach
+
+
+    </div>
+    
+    
+<!-- edit -->
+    <form action="{{ route('image.edit.action'), $data->id }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      @method('PUT')
+      <div class="mb-5">
+      <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title Slider</label>
+      <input type="text" name="title" id="title" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" value="{{ $data->title }}" required />
+      </div>
+      <div class="mb-5">
+      <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link Slider</label>
+      <input type="text" id="link" name="link" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" value="{{ $data->link }}" required />
+      </div>
+      <div class="mb-5">
+      <label for="image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image Slider</label>
+      <img src="{{asset('storage/'.$data->path)}}" alt="{{asset('storage/'.$data->title)}}" srcset="" width="100px">
+      <input type="file" name="image" id="image" class="shadow-sm bg-gray-50  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
+      </div>
+      <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Slider</button>
+  </form>
+
+<script>
+// Function to toggle the modal
+function toggleModal(modalID) {
+  const modal = document.getElementById(modalID);
+  if (modal) {
+    modal.classList.toggle('hidden');
+  }
+}
+
+// Function to show the modal
+function showModal(modalID) {
+  const modal = document.getElementById(modalID);
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
+}
+
+// Function to hide the modal
+function hideModal(modalID) {
+  const modal = document.getElementById(modalID);
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+// Event listener for modal toggle, show, and hide
+document.addEventListener('click', (event) => {
+  const toggleTarget = event.target.getAttribute('data-modal-toggle');
+  const hideTarget = event.target.getAttribute('data-modal-hide');
+  const modalTarget = event.target.closest('[data-modal-target]')?.getAttribute('data-modal-target');
+
+  if (toggleTarget) {
+    toggleModal(toggleTarget);
+  } else if (hideTarget) {
+    hideModal(hideTarget);
+  } else if (modalTarget && event.target.hasAttribute('data-modal-toggle')) {
+    toggleModal(modalTarget);
+  }
+});
+
+    </script>
